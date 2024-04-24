@@ -54,7 +54,10 @@ public:
     /**
      * @brief Enable the writer.
      *
-     * @throws \c InconsistencyException if \c open_new_file_nts_ or \c close_current_file_nts_ fail.
+     * After a \c FullFileException :
+     * - @throws \c InconsistencyException if the allocated space is not enough to close the current file or to open a
+     * new one.
+     * - @throws \c InitializationException if the MCAP library fails to open a new file.
      */
     DDSRECORDER_PARTICIPANTS_DllAPI
     void enable();
@@ -62,7 +65,9 @@ public:
     /**
      * @brief Disable the writer.
      *
-     * @throws \c InconsistencyException if \c open_new_file_nts_ or \c close_current_file_nts_ fail.
+     * After a \c FullFileException :
+     * - @throws \c InconsistencyException if the allocated space is not enough to close the current file or to open a
+     * new one.
      */
     DDSRECORDER_PARTICIPANTS_DllAPI
     void disable();
@@ -71,10 +76,14 @@ public:
      * @brief Writes data to the MCAP file.
      *
      * @param data Pointer to the data to be written.
-     * @throws \c InconsistencyException if \c open_new_file_nts_ or \c close_current_file_nts_ fail.
+     *
+     * After a \c FullFileException :
+     * - @throws \c InconsistencyException if the allocated space is not enough to close the current file or to open a
+     * new one.
+     * - @throws \c InitializationException if the MCAP library fails to open a new file.
      */
-    DDSRECORDER_PARTICIPANTS_DllAPI
     template <typename T>
+    DDSRECORDER_PARTICIPANTS_DllAPI
     void write(
             const T& data);
 
@@ -84,7 +93,11 @@ public:
      * The dynamic types payload is written down as an attachment when the MCAP file is being closed.
      *
      * @param dynamic_types_payload The dynamic types payload to be written.
-     * @throws \c InconsistencyException if \c open_new_file_nts_ or \c close_current_file_nts_ fail.
+     *
+     * After a \c FullFileException :
+     * - @throws \c InconsistencyException if the allocated space is not enough to close the current file or to open a
+     * new one.
+     * - @throws \c InitializationException if the MCAP library fails to open a new file.
      */
     DDSRECORDER_PARTICIPANTS_DllAPI
     void update_dynamic_types(
@@ -106,8 +119,9 @@ protected:
      *
      * @param min_file_size The minimum size of the file.
      * @throws \c FullDiskException if the disk is full.
-     * @throws \c InconsistencyException if the minimum file size is not enough to write the: metadata, schemas,
-     * channels and attachment.
+     * @throws \c InconsistencyException if \c min_file_size is not enough to write the: metadata, schemas, channels,
+     * and attachment.
+     * @throws \c InitializationException if the MCAP library fails to open the new file.
      */
     void open_new_file_nts_(
             const std::uint64_t min_file_size);
@@ -115,7 +129,7 @@ protected:
     /**
      * @brief Closes the current file.
      *
-     * @throws \c InconsistencyException if there is not enough space to write the attachment before closing.
+     * @throws \c InconsistencyException if there is not enough space to write the attachment.
      */
     void close_current_file_nts_();
 
@@ -166,8 +180,9 @@ protected:
      * The function closes the current file and opens a new one.
      *
      * @throws \c FullDiskException if the MCAP file is full.
-     * @throws \c InconsistencyException if the minimum file size is not enough to write the: metadata, schemas,
-     * channels and attachment.
+     * @throws \c InconsistencyException if \c min_file_size is not enough to write the: metadata, schemas, channels,
+     * and attachment.
+     * @throws \c InitializationException if the MCAP library fails to open the new file.
      */
     void on_mcap_full_nts_(
             const FullFileException& e);
