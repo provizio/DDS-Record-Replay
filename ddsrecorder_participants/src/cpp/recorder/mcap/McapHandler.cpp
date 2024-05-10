@@ -18,16 +18,11 @@
 
 #define MCAP_IMPLEMENTATION  // Define this in exactly one .cpp file
 
-#include <algorithm>
+#include <string>
 
 #include <mcap/reader.hpp>
-#include <yaml-cpp/yaml.h>
-
-#include <fastrtps/types/TypeObjectFactory.h>
 
 #include <cpp_utils/exception/InconsistencyException.hpp>
-#include <cpp_utils/time/time_utils.hpp>
-#include <cpp_utils/utils.hpp>
 #include <cpp_utils/ros2_mangling.hpp>
 
 #include <ddspipe_core/types/dynamic_types/schema.hpp>
@@ -35,7 +30,6 @@
 #include <ddsrecorder_participants/constants.hpp>
 #include <ddsrecorder_participants/recorder/mcap/McapHandler.hpp>
 #include <ddsrecorder_participants/recorder/message/McapMessage.hpp>
-#include <ddsrecorder_participants/recorder/mcap/utils.hpp>
 #include <ddsrecorder_participants/recorder/output/Serializer.hpp>
 
 namespace eprosima {
@@ -145,7 +139,7 @@ void McapHandler::add_schema(
     // Add type to the list of received types
     received_types_.insert(type_name);
 
-    // Add type to the DynamicTypesCollection
+    // Add type to the collection of dynamic types
     store_dynamic_type_(type_name);
 
     if (configuration_.record_types)
