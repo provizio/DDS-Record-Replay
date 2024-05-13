@@ -16,16 +16,6 @@
  * @file McapWriter.cpp
  */
 
-#include <filesystem>
-#include <stdexcept>
-
-#include <mcap/internal.hpp>
-
-#include <cpp_utils/exception/InconsistencyException.hpp>
-#include <cpp_utils/Formatter.hpp>
-#include <cpp_utils/Log.hpp>
-#include <cpp_utils/time/time_utils.hpp>
-
 #include <ddsrecorder_participants/recorder/exceptions/FullDiskException.hpp>
 #include <ddsrecorder_participants/recorder/exceptions/FullFileException.hpp>
 #include <ddsrecorder_participants/recorder/mcap/McapWriter.hpp>
@@ -48,7 +38,7 @@ void McapWriter::write(
     {
         try
         {
-            on_mcap_full_nts_(e);
+            on_file_full_nts_(e, size_tracker_.get_min_mcap_size());
             write_nts_(data);
         }
         catch(const FullDiskException& e)
