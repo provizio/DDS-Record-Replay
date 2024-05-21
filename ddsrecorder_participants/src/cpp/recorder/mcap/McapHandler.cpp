@@ -122,7 +122,7 @@ void McapHandler::add_schema(
     schemas_[type_name] = std::move(new_schema);
 
     // Add type to the list of received types
-    received_types_.insert(type_name);
+    received_types_[type_name] = dynamic_type;
 
     // Add type to the collection of dynamic types
     store_dynamic_type_(type_name);
